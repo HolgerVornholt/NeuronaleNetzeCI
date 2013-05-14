@@ -17,7 +17,7 @@ public class Network {
 	// Neurons in the Network will be saved in layers and saved in multiple LinkedLists.
 	private LinkedList<Neuron>[] neuronLayer;
 	
-	Network(int layerCount){
+	public Network(int layerCount){
 		
 	}
 	

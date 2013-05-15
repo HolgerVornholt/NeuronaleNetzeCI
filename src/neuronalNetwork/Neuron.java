@@ -25,13 +25,12 @@ public class Neuron {
 	
 	public Neuron(String propFunc){
 		currentActivity = 0;
-		if(isValidPropFunc(propFunc)){
-			this.propagationFunction = propFunc;
-		} else {
-			System.out.println("The name " + propFunc +" is not a defined propagation function.");
-			System.out.println("Possible Strings are " + Arrays.toString(possiblePropFunc));
-		}		
-		//check validity of propFunc with isValidPropFunc
+		this.setPropagationFunction(propFunc);
+	}
+	
+	public Neuron(Neuron neuron){
+		currentActivity = neuron.getCurrentActivity();
+		propagationFunction = neuron.getPropagationFunction();
 	}
 	
 	// +++++++++++++++++++++++++++PROPAGATION+++++++++++++++++++++++++++++++++++
@@ -112,6 +111,24 @@ public class Neuron {
 		//the output function works with the current activity
 		//we start by using the identity as output function
 		return this.currentActivity;	
+	}
+	
+	//++++++++++++++++++++++++++++GETTER+++++++++++++++++++++++++++++++++++
+	public String getPropagationFunction(){
+		return this.propagationFunction;
+	}
+	
+	public double getCurrentActivity(){
+		return this.currentActivity;
+	}
+	//+++++++++++++++++++++++++++++SETTER+++++++++++++++++++++++++++++++++++++++
+	public void setPropagationFunction(String propFunc){
+		if(isValidPropFunc(propFunc)){
+			this.propagationFunction = propFunc;
+		} else {
+			System.out.println("The name " + propFunc +" is not a defined propagation function.");
+			System.out.println("Possible Strings are " + Arrays.toString(possiblePropFunc));
+		}
 	}
 
 	

@@ -111,6 +111,16 @@ public class Network {
 		return this.layerCount;
 	}
 	
+	public int maxLayerSize(){
+		int max = 0;
+		for (int i = 0;i < this.getLayerCount(); i++){
+			if (max < this.howManyInLayer(i)){
+				max = this.howManyInLayer(i);
+			}
+		}
+		return max;
+	}
+	
 	public Neuron getNeuron(int layer,int position){
 		return neuronLayer[layer].get(position);
 	}
@@ -128,5 +138,9 @@ public class Network {
 			System.out.println(zeile);
 			zeile = "";
 		}
+	}
+	
+	public int getAddedNeurons(){
+		return this.addedNeurons;
 	}
 }

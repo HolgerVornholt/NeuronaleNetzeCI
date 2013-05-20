@@ -121,6 +121,10 @@ public class Neuron {
 	public double getCurrentActivity(){
 		return this.currentActivity;
 	}
+	
+	public String[] getPossiblePropFunc(){
+		return this.possiblePropFunc;
+	}
 	//+++++++++++++++++++++++++++++SETTER+++++++++++++++++++++++++++++++++++++++
 	public void setPropagationFunction(String propFunc){
 		if(isValidPropFunc(propFunc)){

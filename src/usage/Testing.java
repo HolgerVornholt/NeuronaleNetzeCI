@@ -38,5 +38,28 @@ public class Testing {
 		
 		myFirstNetwork.updateWeight(0, 0, 0, 1, 0.5);
 		myFirstNetwork.printWeightMatrix();
+		
+		
+		System.out.println("vorher");
+		double[][] testMatrix = {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+		String zeile = "";
+		for (int i = 0; i < testMatrix.length;i++){
+			for (int j = 0; j< testMatrix.length;j++){
+				zeile = zeile + " " + testMatrix[i][j];
+			}
+			System.out.println(zeile);
+			zeile = "";
+		}
+		testMatrix = myFirstNetwork.removeRowColumn(testMatrix, 0, 2);
+		System.out.println("nachher");
+		zeile = "";
+		for (int i = 0; i < testMatrix.length;i++){
+			for (int j = 0; j< testMatrix.length;j++){
+				zeile = zeile + " " + testMatrix[i][j];
+			}
+			System.out.println(zeile);
+			zeile = "";
+		}
+		
 	}
 }

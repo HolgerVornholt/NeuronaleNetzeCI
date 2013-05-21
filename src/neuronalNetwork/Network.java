@@ -67,45 +67,108 @@ public class Network {
 		this.addNeurons(targetLayer,amount,new Neuron(propFunc));
 	}
 	
-	public void removeNeuron(int targetLayer,int  position){
-		//tricky operation as we need to update the weightmatrix as well!
-		//maybe only allow the last Neuron in a layer to be deleted!
+	public void removeNeuron(int targetLayer){
+		//remove the last added Neuron of a Layer and update the weightMatrix.
+		if(this.howManyInLayer(targetLayer)>0){
+			int absolutePos = calcAbsolutePosition(targetLayer,howManyInLayer(targetLayer)-1);
+
+			//remove the respective row and column to fix the absolute positions of the Neurons coming in later layers.
+			weightMatrix = removeRowColumn(weightMatrix,absolutePos,absolutePos);			
+			neuronLayer[targetLayer].removeLast();
+			this.addedNeurons = this.addedNeurons -1;
+		}
 	}
-	
+		
 	/*
 	* The Neurons in the Network are organized in layers
 	* To Update the weight of an edge between to Neurons
 	* you need to know the "coordinates" of the Neurons.
 	* The coordinate of a Neuron is the layer and its position in that layer
-	* I.e. if you have 6 Neurons in layer 2 you can access the neuron (2,3) which is the third
-	* in layer 2.
+	* I.e. if you have 6 Neurons in layer 2 you can access the neuron (1,3) which is the fourth
+	* in layer 2. (zero-based-numbering)
 	* 
 	* In the weightMatrix we don't have these layers. Every Neuron has an absolute number
 	* which can be calculated by calculating the sum of the Neurons on layers below
 	* and the remaining Neurons that come before the Neuron of interest on the same level.
 	* 
 	* If you have 2 layers of Neurons, 6 on the first layer and 4 on the second, you can
-	* access the Neuron (2,3) by calculating 6+2 = 8.
+	* access the last Neuron (1,3) by calculating 6+3 = 9. (absolute Neuron positions go from 0 to 9.) 
 	*
 	*/
 	public void updateWeight(int layerFrom, int posInLayerFrom, int layerTo, int posInLayerTo,double weight){
-		int from = 0;
-		int to = 0;
-		// Error checking for parameters?
-		for (int i = 0; i < layerFrom; i++ ){
-			from = from + this.howManyInLayer(i);
-		}
-		from = from + posInLayerFrom;
-		
-		for (int i = 0; i < layerTo; i++ ){
-			to = to + this.howManyInLayer(i);
-		}
-		to = to + posInLayerTo;
-		
+		//change relative coordinates (layer,position) to absolute positions.
+		int from = calcAbsolutePosition(layerFrom,posInLayerFrom);
+		int to = calcAbsolutePosition(layerTo,posInLayerTo);
+				
 		weightMatrix[from][to] = weight;
 	}
 	
+	//+++++++++++++++++++++++++++++Utilities++++++++++++++++++++++++++++
 	
+	public int[] calcRelativePosition(int absolutePosition){
+		int layer = 0;
+		int position = 0;
+		//get the absolutePos of the last Neuron in the first layer
+		int absPosOfLastInLayer = howManyInLayer(0)-1; //zero-based-numbering
+		//if the neuron is in the first layer,
+		//absolutePosition is <= absPosOfLastInLayer
+		while(absolutePosition>absPosOfLastInLayer){
+			//if not, we need to calculate the absPosOfLastInLayer for the next layer.
+			layer = layer + 1;
+			absPosOfLastInLayer = absPosOfLastInLayer + howManyInLayer(layer);
+		}
+		if(layer !=0){
+			//When we arrive here, layer contains the correct layer
+			//for the position we first calculate the absPosOfLastInLayer for the previous layer
+			absPosOfLastInLayer = absPosOfLastInLayer - howManyInLayer(layer);
+			//Then we substract absPos-absPosOfLastInLayer to get on which position the 
+			//Searched Neuron is. Because the relative position is zero-based we need to substract one more.
+			position = absolutePosition-absPosOfLastInLayer-1;	
+		} else {
+			position = absolutePosition;
+		}
+		int[] relativePos = {layer,position};
+		return relativePos;
+	}
+	
+	public int calcAbsolutePosition(int layer,int position){
+		int absolutePos = 0;
+		
+		for (int i = 0; i < layer; i++ ){
+			absolutePos = absolutePos + this.howManyInLayer(i);
+		}
+		absolutePos = absolutePos + position;
+		
+		return absolutePos;
+	}
+	
+	
+	//+++++++++++++++++++++++++++static methods++++++++++++++++++++++++++++++++++++
+	public static double[][] removeRowColumn(double[][] origMatrix, int row, int col){
+		double[][] destMatrix = new double[origMatrix.length-1][origMatrix.length-1];
+
+        int p = 0;
+        for( int i = 0; i < origMatrix.length; ++i)
+        {
+            if ( i == row)
+                continue;
+
+
+            int q = 0;
+            for( int j = 0; j < origMatrix.length; ++j)
+            {
+                if ( j == col)
+                    continue;
+
+                destMatrix[p][q] = origMatrix[i][j];
+                ++q;
+            }
+
+            ++p;
+        }
+        return destMatrix;
+	}
+		
 	//+++++++++++++++++++++++++++GETTER AND INFO+++++++++++++++++++++++++++++++++
 	public int getLayerCount(){
 		return this.layerCount;

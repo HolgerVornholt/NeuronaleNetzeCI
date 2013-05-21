@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /*
  * To change this template, choose Tools | Templates
@@ -42,18 +43,36 @@ public class NeuronButton extends JButton implements ActionListener{
     }
     
     public void actionPerformed(ActionEvent e) {
-        if(gui.selectOrigin){
-            gui.fromButton = this;
-            gui.selectOrigin = false;
-            gui.repaint();
-        } else {
-            gui.toButton = this;
-            gui.selectOrigin = true;
-            gui.done = true;
-            gui.repaint();
-        }
-        System.out.println(gui.done);
-        System.out.println(this.getWidth());
-        System.out.println(this.getHeight());
+    	
+    	if(gui.editMode){
+    		if(gui.selectOrigin){
+                gui.fromButton = this;
+                gui.selectOrigin = false;
+            } else {                
+                try{                	
+                	String result = (String)JOptionPane.showInputDialog(
+                            gui,
+                            "Please enter weight:",
+                            "Weight",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            null);
+                	if(result != null){
+                		//throws NumberFormatException
+                		double weight = Double.parseDouble(result);
+                		gui.toButton = this;
+                        gui.selectOrigin = true;
+                        gui.editMode = false;
+                    	gui.getNetwork().updateWeight(gui.fromButton.layer, gui.fromButton.position, gui.toButton.layer, gui.toButton.position, weight);
+                    	gui.getAddEditEdgeButton().setEnabled(true);
+                    	gui.getRemoveButton().setEnabled(true);
+                	}
+                }catch(NumberFormatException ex){
+                	JOptionPane.showMessageDialog(gui, "Please enter a valid double value. Select a new target and try again.");
+                }
+            }
+    	}
+       
     }    
 }

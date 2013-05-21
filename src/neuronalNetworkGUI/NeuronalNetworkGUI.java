@@ -19,14 +19,15 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 
     private DrawPanel drawPanel;
     private JPanel gridPanel;
-    public boolean selectOrigin = true;
+    public boolean selectOrigin = false;
+    public boolean editMode = false;
+    public boolean networkInitiated = false;
     public NeuronButton fromButton;
     public NeuronButton toButton;
-    public boolean done = false;
     
     private Network myNetwork;
     private String[] possiblePropFunc;
-    GridLayout gridPanelLayout;
+    private GridLayout gridPanelLayout;
     public int currentZoom = 1;
     private String[] zoomOptions = {"0","1","2","3","4"};
     private int[] neuronHeight = {33,69,128,186,246};
@@ -45,16 +46,18 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         this.possiblePropFunc = new Neuron().getPossiblePropFunc();
         propagationComboBox.setModel(new javax.swing.DefaultComboBoxModel(possiblePropFunc)); 
         zoomComboBox.setModel(new javax.swing.DefaultComboBoxModel(zoomOptions));
+        zoomComboBox.setSelectedIndex(1);
         
         gridPanel = new JPanel();
         drawPanel = new DrawPanel(this);
         drawPanel.setPreferredSize(new Dimension(500,500));
         drawPanel.setBackground(Color.white);
-        gridPanel.setBackground(Color.red);
+        //gridPanel.setBackground(Color.red);
         drawPanel.add(gridPanel);
         gridPanelLayout = new GridLayout(1,0,gridHspace,gridVspace);
         gridPanel.setLayout(gridPanelLayout);
-        gridPanel.setOpaque(true);
+        gridPanel.setOpaque(false);
+       
         
         treeScrollPane.setViewportView(drawPanel);
     }
@@ -507,7 +510,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 		if (row == targetLayer){
                 			//we want to put the Neuron behind the last existing one in a row.
                 			whereTo = newColumns*row-1 + myNetwork.howManyInLayer(row);
-                			gridPanel.add(new NeuronButton("" + myNetwork.getAddedNeurons(),targetLayer,myNetwork.howManyInLayer(targetLayer),this),whereTo);
+                			gridPanel.add(new NeuronButton("" + myNetwork.getAddedNeurons(),targetLayer,myNetwork.howManyInLayer(targetLayer)-1,this),whereTo);
                 		} else {
                 			// we need to add a label to the end of each row. if we have a gridlayout with 3 rows and 5 columns
                 			// this means: add a label to index 4,9 and 14. this can be calculated by rowNumber*Columns-1 i.e for column 2: 3*2-1 = 9.
@@ -519,7 +522,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 } else {
                 	whereTo = gridPanelLayout.getColumns()*targetLayer-1 + myNetwork.howManyInLayer(targetLayer);
                 	gridPanel.remove(whereTo);
-                	gridPanel.add(new NeuronButton("" + myNetwork.getAddedNeurons(),targetLayer,myNetwork.howManyInLayer(targetLayer),this),whereTo);
+                	gridPanel.add(new NeuronButton("" + myNetwork.getAddedNeurons(),targetLayer,myNetwork.howManyInLayer(targetLayer)-1,this),whereTo);
                 }
                 
               //Calculate new Height and Width of gridPanel
@@ -531,10 +534,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 gridPanel.setVisible(true);
     		} else {
     			JOptionPane.showMessageDialog(this, "The layer can only be between 1 and " + (myNetwork.getLayerCount()));
-    		}
-            //NeuronButton geladen = (NeuronButton) gridPanel.getComponent(4);
-            //geladen.setEnabled(false);
-    		
+    		}   
         }  catch (NumberFormatException e){
         	JOptionPane.showMessageDialog(this, whichLayerTextField.getText() + " is not a valid layer");
         }  catch(NullPointerException e){
@@ -543,11 +543,45 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        // TODO add your handling code here:
+    	int targetLayer;
+    	try{
+        	//throws NumberFormatException if not a Number.
+    		targetLayer = Integer.parseInt(whichLayerTextField.getText())-1;
+    		//throws NullPointerException if Network has not been initialized.
+    		if (targetLayer < myNetwork.getLayerCount() && targetLayer >= 0 && myNetwork.howManyInLayer(targetLayer)>0){
+    			int whereTo;
+                //We never shrink the column size so we can just remove the NeuronButton and add a label to the end of the row
+                whereTo = gridPanelLayout.getColumns()*targetLayer-1 + myNetwork.howManyInLayer(targetLayer);
+        		gridPanel.remove(whereTo);
+        		whereTo = gridPanelLayout.getColumns()*targetLayer-1 + gridPanelLayout.getColumns();
+    			gridPanel.add(new JLabel(""),whereTo);
+                gridPanel.setVisible(false);
+                gridPanel.setVisible(true);
+                myNetwork.removeNeuron(targetLayer);
+    		} else {
+    			if(myNetwork.howManyInLayer(targetLayer)==0){
+    				JOptionPane.showMessageDialog(this, "There are no Neurons to remove!");	
+    			} else{
+    			JOptionPane.showMessageDialog(this, "The layer can only be between 1 and " + (myNetwork.getLayerCount()));
+    			}    			
+    		}
+            //NeuronButton geladen = (NeuronButton) gridPanel.getComponent(4);
+            //geladen.setEnabled(false);
+    		
+        }  catch (NumberFormatException e){
+        	JOptionPane.showMessageDialog(this, whichLayerTextField.getText() + " is not a valid layer");
+        }  catch(NullPointerException e){
+        	JOptionPane.showMessageDialog(this, "Please setup a Network first.");
+        }    	
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addEditEdgeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEditEdgeButtonActionPerformed
-        // TODO add your handling code here:
+        //disable add/edit button
+    	addEditEdgeButton.setEnabled(false);
+    	removeButton.setEnabled(false);
+    	//tell the buttons that editMode is on and the first Button will be selected
+    	editMode = true;
+    	selectOrigin = true;   	
     }//GEN-LAST:event_addEditEdgeButtonActionPerformed
 
     private void applyNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyNetworkButtonActionPerformed
@@ -559,6 +593,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         	gridPanelLayout.setRows(myNetwork.getLayerCount());
             gridPanel.setVisible(false);
             gridPanel.setVisible(true);
+            networkInitiated = true;
         } catch (NumberFormatException e){
         	JOptionPane.showMessageDialog(this, layersTextField.getText() + " is not a valid layer count.");
         }
@@ -571,7 +606,6 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         int height = (neuronHeight[currentZoom]+gridVspace)*gridPanelLayout.getRows()-gridVspace;
         gridPanel.setPreferredSize(new Dimension(width,height));
         drawPanel.setPreferredSize(new Dimension(width,height));
-        
         
         path = "Images/Neuron" + this.currentZoom +".png";
         imgURL = getClass().getResource(path);
@@ -587,7 +621,6 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         
         gridPanel.setVisible(false);
         gridPanel.setVisible(true);
-        
     }//GEN-LAST:event_applyViewButtonActionPerformed
 
     private void trainingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainingButtonActionPerformed
@@ -636,6 +669,25 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
             }
         });      
     }
+    
+    public Network getNetwork(){
+    	return myNetwork;
+    }
+    
+    public JButton getAddEditEdgeButton(){
+    	return addEditEdgeButton;
+    }
+    
+    public JButton getRemoveButton(){
+    	return removeButton;
+    }
+    
+    public JPanel getGridPanel(){
+    	return this.gridPanel;
+    }
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton addEditEdgeButton;

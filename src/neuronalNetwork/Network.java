@@ -33,6 +33,8 @@ public class Network {
 		this.addNeurons(targetLayer,1, neuron);
 	}
 	
+	//TODO Adding Neurons has to change the weight Matrix as Columns need to be shifted if
+	//Neurons are added to previous layers but the weightMatrix has already been filled.
 	public void addNeurons(int targetLayer, int amount, Neuron neuron){
 		//update size of weightMatrix
 		int noSpaceFor;
@@ -190,6 +192,10 @@ public class Network {
 	
 	public int howManyInLayer(int layer){
 		return this.neuronLayer[layer].size();
+	}
+	
+	public double[][] getWeightMatrix(){
+		return weightMatrix;
 	}
 	
 	public void printWeightMatrix(){

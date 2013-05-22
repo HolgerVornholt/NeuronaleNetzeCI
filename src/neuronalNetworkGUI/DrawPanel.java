@@ -54,7 +54,6 @@ public class DrawPanel extends JPanel {
             	  		locSource = source.getLocation();
             	  		locSource.x = locSource.x + locGrid.x +source.getWidth()/2;
             	  		locSource.y = locSource.y + locGrid.y + source.getHeight()/2;
-            	  		System.out.println("Source: " + locSource.x + " und "+locSource.y);
             	  		
             	  		gridRowsBefore = network.calcRelativePosition(col)[0];
             	  		position = network.calcRelativePosition(col)[1];
@@ -63,12 +62,12 @@ public class DrawPanel extends JPanel {
             	  		locTarget = target.getLocation();
             	  		locTarget.x = locTarget.x + locGrid.x +target.getWidth()/2;
             	  		locTarget.y = locTarget.y + locGrid.y +target.getHeight()/2;
-            	  		System.out.println("Target: " + locTarget.x + " und "+locTarget.y);
             	  		
             	  		center.x = (locTarget.x+locSource.x)/2;
             	  		center.y = (locTarget.y+locSource.y)/2;
             	  		
             	  		//TODO Gewicht dranschreiben
+            	  		//TODO Spitze nicht in die Mitte malen wegen überschneidungen-> besser ins erste Drittel.
             	  		pfeil.draw(g2D, locSource.x, locSource.y, center.x, center.y);
             	  		pfeil.draw(g2D, center.x, center.y, locTarget.x, locTarget.y);
         	  		}
@@ -80,9 +79,6 @@ public class DrawPanel extends JPanel {
         	  	}
         	  	
                 this.repaint();
-                
-                System.out.println("current weightMatrix");
-                network.printWeightMatrix();
           }
     }
 }

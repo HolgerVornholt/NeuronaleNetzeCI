@@ -9,6 +9,10 @@ public class Testing {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		double[][] teeest = new double[0][0];
+		System.out.println(teeest.length);
+		
+		
 		//Neuron creation test with arbitrary inputs and weights.
 		Neuron myFirstNeuron = new Neuron("min");
 		double input[] = {5,20,-1};
@@ -60,6 +64,18 @@ public class Testing {
 			System.out.println(zeile);
 			zeile = "";
 		}
+		testMatrix = myFirstNetwork.insertRowCol(testMatrix, 0, 2);
+		System.out.println("nachher2");
+		zeile = "";
+		for (int i = 0; i < testMatrix.length;i++){
+			for (int j = 0; j< testMatrix.length;j++){
+				zeile = zeile + " " + testMatrix[i][j];
+			}
+			System.out.println(zeile);
+			zeile = "";
+		}
+		
+		
 		
 	}
 }

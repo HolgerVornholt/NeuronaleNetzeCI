@@ -48,6 +48,12 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         zoomComboBox.setModel(new javax.swing.DefaultComboBoxModel(zoomOptions));
         zoomComboBox.setSelectedIndex(1);
         
+        //disable Buttons unavailable before Network is created
+        this.addEditEdgeButton.setEnabled(false);
+        this.addButton.setEnabled(false);
+        this.removeButton.setEnabled(false);
+ 
+        
         gridPanel = new JPanel();
         drawPanel = new DrawPanel(this);
         drawPanel.setPreferredSize(new Dimension(500,500));
@@ -515,7 +521,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 			// we need to add a label to the end of each row. if we have a gridlayout with 3 rows and 5 columns
                 			// this means: add a label to index 4,9 and 14. this can be calculated by rowNumber*Columns-1 i.e for column 2: 3*2-1 = 9.
                 			whereTo = newColumns*row-1 + newColumns;
-                			gridPanel.add(new JLabel("neuerButton"),whereTo);
+                			gridPanel.add(new JLabel(""),whereTo);
                 		}                		
                 	}
                 //If the maxLayerSize has not been changed, a Label has to be replaced by the added Neuron.
@@ -576,17 +582,28 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addEditEdgeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEditEdgeButtonActionPerformed
-        //disable add/edit button
-    	addEditEdgeButton.setEnabled(false);
-    	removeButton.setEnabled(false);
-    	//tell the buttons that editMode is on and the first Button will be selected
-    	editMode = true;
-    	selectOrigin = true;   	
+        
+    	if (myNetwork.getAddedNeurons()>1){
+    		//disable add/edit button
+        	addEditEdgeButton.setEnabled(false);
+        	removeButton.setEnabled(false);
+        	//tell the buttons that editMode is on and the first Button will be selected
+        	editMode = true;
+        	selectOrigin = true;   	
+    	} else {
+    		JOptionPane.showMessageDialog(this,"Not enough Neurons available. Needs at least 2.");
+    	}
+    	
     }//GEN-LAST:event_addEditEdgeButtonActionPerformed
 
     private void applyNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyNetworkButtonActionPerformed
         try{
         	myNetwork = new Network(Integer.parseInt(layersTextField.getText()));
+        	//enable Buttons unavailable before Network is created
+            this.addEditEdgeButton.setEnabled(true);
+            this.addButton.setEnabled(true);
+            this.removeButton.setEnabled(true);
+            
         	gridPanel.removeAll();
         	gridPanelLayout.setColumns(0);
         	//needs check for range! (negative and 0 are not allowed)

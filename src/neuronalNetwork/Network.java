@@ -26,7 +26,7 @@ public class Network {
 		for(int i=0; i < neuronLayer.length; i++){
 		    neuronLayer[i] = new LinkedList<Neuron>();
 		}
-		weightMatrix = new double[10][10];
+		weightMatrix = new double[0][0];
 	}
 	
 	public void addNeuron(int targetLayer, Neuron neuron){
@@ -36,27 +36,11 @@ public class Network {
 	//TODO Adding Neurons has to change the weight Matrix as Columns need to be shifted if
 	//Neurons are added to previous layers but the weightMatrix has already been filled.
 	public void addNeurons(int targetLayer, int amount, Neuron neuron){
-		//update size of weightMatrix
-		int noSpaceFor;
-		int newDim;
-		int oldDim = weightMatrix.length;
-		// If the weightMatrix isn't big enough we need to add rows and columns to it.
-		if (this.addedNeurons+amount > oldDim){
-			noSpaceFor = (this.addedNeurons+amount-oldDim);
-		    //always add 10 columns minimum.
-			if (noSpaceFor <10){
-				newDim = oldDim+10;
-			} else {
-				newDim = oldDim+noSpaceFor;
-			}
-			//resize
-			double[][] weightMatrixTemp = new double[newDim][newDim];
-			//copy old values
-			for (int i = 0; i < oldDim;i++){
-				java.lang.System.arraycopy(weightMatrix[i], 0, weightMatrixTemp[i], 0, oldDim);
-			}
-			this.weightMatrix = weightMatrixTemp;
-		}
+		
+		//there have to be new columns and rows starting at the absolute position of the
+		//first new Neuron. This will be the absolutePosition of (targetLayer,howManyInThatLayer) because of zero-based-numbering.
+		int insertAt = this.calcAbsolutePosition(targetLayer, this.howManyInLayer(targetLayer));
+		this.weightMatrix = this.insertRowCol(this.weightMatrix, insertAt, amount);
 		this.addedNeurons = this.addedNeurons + amount;
 		
 		//clone the neuron "amount" times and add it to the Network.
@@ -142,6 +126,54 @@ public class Network {
 		absolutePos = absolutePos + position;
 		
 		return absolutePos;
+	}
+	
+	public double[][] insertRowCol(double[][] weightMatrix, int insertAt, int howMany){
+		int oldDim = weightMatrix.length;
+		int newDim = oldDim + howMany;
+		//the new weightMatrix will have a new row and column for each added Neuron
+		double[][] tempMatrix = new double[newDim][newDim];
+		
+		//1) copy the rows of the old matrix to the new one. 
+		// a row that looks like this 1,2,3 will look like 1,2, 0, ... , 0,3 
+		if(insertAt > 0){
+			for(int row = 0; row<insertAt;row++){
+				//copy left part of the rows i.e. 1,2
+				java.lang.System.arraycopy(weightMatrix[row], 0, tempMatrix[row], 0, insertAt);
+				//set new columnvalues to 0 i.e. 0,...,0
+				for(int insertCol = insertAt;insertCol < insertAt+howMany;insertCol++){
+					tempMatrix[row][insertCol] = 0;
+				}
+				//if we reached the last column of the matrix we are done with this part
+				//if not we need to copy the right part of the original row. i.e. 3
+				if(insertAt+howMany-1 != (tempMatrix.length-1)){
+					java.lang.System.arraycopy(weightMatrix[row],insertAt,tempMatrix[row],(insertAt+howMany),(weightMatrix.length-insertAt));
+				}
+			}
+		}
+		//2) add zero rows
+		for(int row = insertAt;row<insertAt+howMany;row++){
+			for(int col = 0; col<tempMatrix.length;col++){
+			tempMatrix[row][col] = 0;	
+			}
+		}
+		//3) copy old rows after the inserted ones as in 1)
+		if(insertAt < weightMatrix.length){
+			for(int row = insertAt+howMany; row<tempMatrix.length;row++){
+				//copy left part of the rows i.e. 1,2
+				java.lang.System.arraycopy(weightMatrix[row-howMany], 0, tempMatrix[row], 0, insertAt);
+				//set new columnvalues to 0 i.e. 0,...,0
+				for(int insertCol = insertAt;insertCol < insertAt+howMany;insertCol++){
+					tempMatrix[row][insertCol] = 0;
+				}
+				//if we reached the last column of the matrix we are done with this part
+				//if not we need to copy the right part of the original row. i.e. 3
+				if(insertAt+howMany-1 != (tempMatrix.length-1)){
+					java.lang.System.arraycopy(weightMatrix[row-howMany],insertAt,tempMatrix[row],(insertAt+howMany),(weightMatrix.length-insertAt));
+				}
+			}
+		}
+		return tempMatrix;
 	}
 	
 	

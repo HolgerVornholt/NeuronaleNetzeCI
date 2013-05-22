@@ -39,16 +39,17 @@ public class NeuronButton extends JButton implements ActionListener{
         this.setBorderPainted(false);
         this.setContentAreaFilled(false);
         this.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        
     }
     
     public void actionPerformed(ActionEvent e) {
-    	
     	if(gui.editMode){
     		if(gui.selectOrigin){
                 gui.fromButton = this;
                 gui.selectOrigin = false;
-            } else {                
+            } else {
+            	if (gui.fromButton.equals(this)){
+            		JOptionPane.showMessageDialog(gui, "Please select a target thats different from the source Neuron.");
+            	} else{
                 try{                	
                 	String result = (String)JOptionPane.showInputDialog(
                             gui,
@@ -71,6 +72,7 @@ public class NeuronButton extends JButton implements ActionListener{
                 }catch(NumberFormatException ex){
                 	JOptionPane.showMessageDialog(gui, "Please enter a valid double value. Select a new target and try again.");
                 }
+            	}
             }
     	}
        

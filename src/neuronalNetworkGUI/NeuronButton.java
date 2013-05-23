@@ -19,6 +19,7 @@ public class NeuronButton extends JButton implements ActionListener{
     private NeuronalNetworkGUI gui;
     public int layer;
     public int position;
+    int absPos;
     
       
     NeuronButton(String caption,int layer,int position,NeuronalNetworkGUI gui){
@@ -26,6 +27,7 @@ public class NeuronButton extends JButton implements ActionListener{
         this.gui = gui;
         this.layer = layer;
         this.position = position;
+        this.absPos = gui.getNetwork().calcAbsolutePosition(layer,position);
         //this.setActionCommand("button"+i);
         this.addActionListener(this);
         String path = "Images/Neuron" + gui.currentZoom +".png";
@@ -74,7 +76,38 @@ public class NeuronButton extends JButton implements ActionListener{
                 }
             	}
             }
+    	}else{
+    		//We can also press the Button to set output values to input or BIAS-Neurons.
+    		//We identify these by checking if they have any edge leading to them.
+    		double[][] weightMatrix = gui.getNetwork().getWeightMatrix();
+    		boolean inputNeuron = true;
+    		for(int row=0;row<weightMatrix.length;row++){
+    			if(weightMatrix[row][absPos] != 0){
+    				inputNeuron = false;
+    			}
+    		}
+    		if(inputNeuron){
+    			try{                	
+                	String result = (String)JOptionPane.showInputDialog(
+                            gui,
+                            "Please enter a value for the input Neuron:",
+                            "Enter output",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            null);
+                	if(result != null){
+                		//throws NumberFormatException
+                		double value = Double.parseDouble(result);
+                    	gui.getNetwork().setOutput(layer, position, value);
+                    	gui.updateButtonTexts();
+                	}
+                }catch(NumberFormatException ex){
+                	JOptionPane.showMessageDialog(gui, "Please enter a valid double value. Select a new target and try again.");
+                }
+    		}
     	}
+    	
        
     }    
 }

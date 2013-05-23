@@ -12,6 +12,7 @@ public class Neuron {
 	// A Neuron always remembers its previous Activity and needs
 	// to calculate a new Activity when it needs to calculate an output value.
 	private double currentActivity;
+	private double lastOutput;
 	// There are different ways to propagate weighted input. The different functions
 	// are defined in the propagation Method. The String in propagationFunction
 	// defines which function will be used.
@@ -110,6 +111,7 @@ public class Neuron {
 		
 		//the output function works with the current activity
 		//we start by using the identity as output function
+		lastOutput = this.currentActivity;
 		return this.currentActivity;	
 	}
 	
@@ -121,6 +123,10 @@ public class Neuron {
 	public double getCurrentActivity(){
 		return this.currentActivity;
 	}
+	
+	public double getLastOutput(){
+		return this.lastOutput;
+	}	
 	
 	public String[] getPossiblePropFunc(){
 		return this.possiblePropFunc;
@@ -134,6 +140,9 @@ public class Neuron {
 			System.out.println("Possible Strings are " + Arrays.toString(possiblePropFunc));
 		}
 	}
-
 	
+	//Shortcut for input Neurons.
+	public void setLastOutput(double value){
+		this.lastOutput = value;
+	}
 }

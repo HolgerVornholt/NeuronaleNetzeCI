@@ -1,5 +1,7 @@
 package neuronalNetworkGUI;
 import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -39,9 +41,21 @@ public class DrawPanel extends JPanel {
                 Point locTarget;
                 Point center = new Point();
                 g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2D.setStroke(new BasicStroke(3F));  // set stroke width of 10
+                g2D.setStroke(new BasicStroke(3F));  // set stroke width
                 Arrow pfeil = new Arrow();
         	  	
+                double max = 0;
+                for(int row = 0;row<network.getAddedNeurons();row++){
+                for(int col = 0;col<network.getAddedNeurons();col++){
+            		if(max < Math.abs(weightMatrix[row][col])){
+            			max = Math.abs(weightMatrix[row][col]);
+            		}
+            	}
+                }
+                
+                Font font = new Font("Serif", Font.PLAIN, 20*gui.currentZoom);
+                g2D.setFont(font);
+
                 //weightMatrix.length can be bigger than the addedNeurons so its important to use network.getAddedNeurons()
                 for(int row = 0;row<network.getAddedNeurons();row++){
         	  	for(int col = 0;col<network.getAddedNeurons();col++){
@@ -63,18 +77,17 @@ public class DrawPanel extends JPanel {
             	  		locTarget.x = locTarget.x + locGrid.x +target.getWidth()/2;
             	  		locTarget.y = locTarget.y + locGrid.y +target.getHeight()/2;
             	  		
-            	  		center.x = (locTarget.x+locSource.x)/2;
-            	  		center.y = (locTarget.y+locSource.y)/2;
+            	  		//Arrowhead not in the center for intersections-> better at 2/5 of the distance.
+            	  		center.x = locSource.x + (locTarget.x-locSource.x)*2/5;
+            	  		center.y = locSource.y + (locTarget.y-locSource.y)*2/5;
             	  		
-            	  		//TODO Gewicht dranschreiben
-            	  		//TODO Spitze nicht in die Mitte malen wegen überschneidungen-> besser ins erste Drittel.
+            	  		g2D.setStroke(new BasicStroke((float) (Math.abs(weightMatrix[row][col])/max*5)));
             	  		pfeil.draw(g2D, locSource.x, locSource.y, center.x, center.y);
             	  		pfeil.draw(g2D, center.x, center.y, locTarget.x, locTarget.y);
+            	  		g2D.setColor(Color.blue);
+            	  		g2D.drawString(""+weightMatrix[row][col], center.x+10, center.y-10);
+            	  		g2D.setColor(Color.black);
         	  		}
-        	  		
-        	  		
-        	  		
-        	  		//weightMatrix[row][col];
         	  	}
         	  	}
         	  	

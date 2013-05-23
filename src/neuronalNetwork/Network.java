@@ -20,6 +20,10 @@ public class Network {
 	private LinkedList<Neuron>[] neuronLayer;
 
 	public Network(int layerCount){
+		if (layerCount <=0){
+			System.out.println(layerCount + " is not a valid layerCount and has to be positive. layerCount is set to 1.");
+			layerCount = 1;
+		}
 		this.addedNeurons = 0;
 		this.layerCount = layerCount;
 		this.neuronLayer = (LinkedList<Neuron>[]) new LinkedList[layerCount];
@@ -32,9 +36,7 @@ public class Network {
 	public void addNeuron(int targetLayer, Neuron neuron){
 		this.addNeurons(targetLayer,1, neuron);
 	}
-	
-	//TODO Adding Neurons has to change the weight Matrix as Columns need to be shifted if
-	//Neurons are added to previous layers but the weightMatrix has already been filled.
+
 	public void addNeurons(int targetLayer, int amount, Neuron neuron){
 		
 		//there have to be new columns and rows starting at the absolute position of the
@@ -64,9 +66,52 @@ public class Network {
 			this.addedNeurons = this.addedNeurons -1;
 		}
 	}
-		
-	/*
-	* The Neurons in the Network are organized in layers
+	
+	//Method to set the value for input Neurons
+	public void setOutput(int targetLayer, int position,double value){
+		neuronLayer[targetLayer].get(position).setLastOutput(value);
+	}
+	
+	//recursive Method to calculate one specific output value.
+	private double calcOutput(int targetLayer,int position){
+		int[] relPos;
+		int absPos = this.calcAbsolutePosition(targetLayer, position);
+		double[] input = new double[addedNeurons];
+		double[] weights = new double[addedNeurons];
+		boolean inputNeuron=true;
+
+		for(int row = 0; row < addedNeurons;row++){
+			if(weightMatrix[row][absPos] != 0){
+				inputNeuron = false;
+				relPos = calcRelativePosition(row);
+				weights[row] = weightMatrix[row][absPos];				
+				input[row] = calcOutput(relPos[0],relPos[1]);
+			}else{
+				weights[row] = 0;
+				input[row] = 0;
+			}
+		}		
+
+		if (inputNeuron){
+			//Input Neurons don't have any edges connect to them and have an output preseted
+			//that output is saved in lastOutput.
+			return neuronLayer[targetLayer].get(position).getLastOutput();			
+		}else{
+			//All the other Neurons calculate their output with the calcOutput function.
+			return neuronLayer[targetLayer].get(position).calcOutput(input, weights);
+		}		
+	}
+	
+	//We only calculate the result for the last layer. Custom layer outputs are not supported
+	public double[] calcResultVector(){
+		double[] result = new double[howManyInLayer(layerCount-1)];
+		for (int position = 0; position < howManyInLayer(layerCount-1); position++){
+			result[position] = calcOutput(layerCount-1,position);
+		}
+		return result;
+	}
+	
+	/* The Neurons in the Network are organized in layers
 	* To Update the weight of an edge between to Neurons
 	* you need to know the "coordinates" of the Neurons.
 	* The coordinate of a Neuron is the layer and its position in that layer

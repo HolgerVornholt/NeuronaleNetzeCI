@@ -12,12 +12,13 @@ import java.awt.Point;
 import javax.swing.*;
 
 /**
- *
- * @author HolgerVornholt
+ * @author Holger Vornholt, Tobias Eidmann, Michael Martin
  */
-public class NeuronalNetworkGUI extends javax.swing.JFrame {
 
-    private DrawPanel drawPanel;
+//TODO The Neuron layers could need a label to visiualize input, output and hidden layers.
+public class NeuronalNetworkGUI extends javax.swing.JFrame {
+	private static final long serialVersionUID = 1L;
+	private DrawPanel drawPanel;
     private JPanel gridPanel;
     public boolean selectOrigin = false;
     public boolean editMode = false;

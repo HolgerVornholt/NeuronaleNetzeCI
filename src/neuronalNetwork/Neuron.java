@@ -7,7 +7,9 @@ import java.util.Arrays;
  * know who it is connected to. It gets information on
  * its input by the Class Network. 
  */
-
+/**
+ * @author Holger Vornholt, Tobias Eidmann, Michael Martin
+ */
 public class Neuron {
 	// A Neuron always remembers its previous Activity and needs
 	// to calculate a new Activity when it needs to calculate an output value.
@@ -40,21 +42,18 @@ public class Neuron {
 		switch(this.propagationFunction){
 		//The sum function calculates the sum of all inputs multiplied by their respective weights
 		case "sum":
-			System.out.println("sum");
 			for (int i = 0; i<input.length;i++){
 				result = result + input[i]*weights[i];
 			}
 			break;
 		//The prod function calculates the product of all inputs multiplied by their respective weights
 		case "prod":
-			System.out.println("prod");
 			for (int i = 0; i<input.length;i++){
 				result = result * input[i]*weights[i];
 			}
 			break;
 		//The max function calculates the maximum of all inputs multiplied by their respective weights
 		case "max":
-			System.out.println("max");
 			result = input[0]*weights[0];
 			for (int i = 1; i<input.length;i++){
 				if(input[i]*weights[i] > result){
@@ -64,7 +63,6 @@ public class Neuron {
 			break;
 		//The min function calculates the minimum of all inputs multiplied by their respective weights
 		case "min":
-			System.out.println("min");
 			result = input[0]*weights[0];
 			for (int i = 1; i<input.length;i++){
 				if(input[i]*weights[i] < result){
@@ -139,10 +137,5 @@ public class Neuron {
 			System.out.println("The name " + propFunc +" is not a defined propagation function.");
 			System.out.println("Possible Strings are " + Arrays.toString(possiblePropFunc));
 		}
-	}
-	
-	//Shortcut for input Neurons.
-	public void setLastOutput(double value){
-		this.lastOutput = value;
 	}
 }

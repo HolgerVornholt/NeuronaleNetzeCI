@@ -6,17 +6,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
- * @author Koronis
+ * @author Holger Vornholt, Tobias Eidmann, Michael Martin
  */
 public class NeuronButton extends JButton implements ActionListener{
-    private NeuronalNetworkGUI gui;
+	private static final long serialVersionUID = 1L;
+	private NeuronalNetworkGUI gui;
     public int layer;
     public int position;
     int absPos;
@@ -99,7 +94,7 @@ public class NeuronButton extends JButton implements ActionListener{
                 	if(result != null){
                 		//throws NumberFormatException
                 		double value = Double.parseDouble(result);
-                    	gui.getNetwork().setOutput(layer, position, value);
+                    	gui.getNetwork().setInput(layer, position, value);
                     	gui.updateButtonTexts();
                 	}
                 }catch(NumberFormatException ex){

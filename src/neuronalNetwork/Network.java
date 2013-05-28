@@ -9,6 +9,9 @@ import java.util.LinkedList;
  * coordinates i.e. (layer,position)
  * absolute position i.e. the 6th Neuron of 22.
  */
+/**
+ * @author Holger Vornholt, Tobias Eidmann, Michael Martin
+ */
 public class Network {
 	// How many layers will the Network have. To be specified in Constructor.
 	private int layerCount;
@@ -67,9 +70,12 @@ public class Network {
 		}
 	}
 	
-	//Method to set the value for input Neurons
-	public void setOutput(int targetLayer, int position,double value){
-		neuronLayer[targetLayer].get(position).setLastOutput(value);
+	public void setInput(int targetLayer, int position,double value){
+		double[] input = new double[1];
+		double[] weights = new double[1];
+		input[0] = value;
+		weights[0] = 1;
+		neuronLayer[targetLayer].get(position).calcOutput(input, weights);
 	}
 	
 	//recursive Method to calculate one specific output value.

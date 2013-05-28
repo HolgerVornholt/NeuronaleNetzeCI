@@ -12,11 +12,11 @@ import javax.swing.*;
 import neuronalNetwork.Network;
 
 /**
- *
- * @author Koronis
+ * @author Holger Vornholt, Tobias Eidmann, Michael Martin
  */
 public class DrawPanel extends JPanel {
-    private NeuronalNetworkGUI gui;
+	private static final long serialVersionUID = 1L;
+	private NeuronalNetworkGUI gui;
     
     DrawPanel(NeuronalNetworkGUI gui){
         super();

@@ -9,6 +9,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.text.DecimalFormat;
+
 import javax.swing.*;
 
 /**
@@ -28,6 +30,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     
     private Network myNetwork;
     private String[] possiblePropFunc;
+    private String[] possibleActFunc;
     private GridLayout gridPanelLayout;
     public int currentZoom = 1;
     private String[] zoomOptions = {"0","1","2","3","4"};
@@ -42,18 +45,24 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     /**
      * Creates new form NeuronalNetworkGUI
      */
+    
+	@SuppressWarnings({ "rawtypes", "unchecked" })
     public NeuronalNetworkGUI() {
         initComponents();
         this.possiblePropFunc = new Neuron().getPossiblePropFunc();
         propagationComboBox.setModel(new javax.swing.DefaultComboBoxModel(possiblePropFunc)); 
+        this.possibleActFunc = new Neuron().getPossibleActFunc();
+        activationComboBox.setModel(new javax.swing.DefaultComboBoxModel(possibleActFunc));
+        activationComboBox.setSelectedIndex(0);
+        actParamTextField.setVisible(false);
+        actParamLabel.setVisible(false);
         zoomComboBox.setModel(new javax.swing.DefaultComboBoxModel(zoomOptions));
         zoomComboBox.setSelectedIndex(1);
         
         //disable Buttons unavailable before Network is created
         this.addEditEdgeButton.setEnabled(false);
         this.addButton.setEnabled(false);
-        this.removeButton.setEnabled(false);
- 
+        this.removeButton.setEnabled(false);        
         
         gridPanel = new JPanel();
         drawPanel = new DrawPanel(this);
@@ -65,6 +74,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         gridPanel.setLayout(gridPanelLayout);
         gridPanel.setOpaque(false);
        
+        statisticsLabel1.setVisible(false);
+        statisticsLabel2.setVisible(false);
         
         treeScrollPane.setViewportView(drawPanel);
     }
@@ -107,6 +118,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         maxItLabel = new javax.swing.JLabel();
         stepButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
+        statisticsLabel1 = new javax.swing.JLabel();
+        statisticsLabel2 = new javax.swing.JLabel();
         treeScrollPane = new javax.swing.JScrollPane();
         rightPanel = new javax.swing.JPanel();
         rightPanelTop = new javax.swing.JPanel();
@@ -122,6 +135,10 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         addEditEdgeButton = new javax.swing.JButton();
         propagationComboBox = new javax.swing.JComboBox();
         propagationLabel = new javax.swing.JLabel();
+        activationComboBox = new javax.swing.JComboBox();
+        activationLabel = new javax.swing.JLabel();
+        actParamTextField = new javax.swing.JTextField();
+        actParamLabel = new javax.swing.JLabel();
         rightBottomPanel = new javax.swing.JPanel();
         viewLabel = new javax.swing.JLabel();
         zoomLabel = new javax.swing.JLabel();
@@ -246,6 +263,10 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
             }
         });
 
+        statisticsLabel1.setText("jLabel1");
+
+        statisticsLabel2.setText("jLabel2");
+
         javax.swing.GroupLayout leftPanelBotLayout = new javax.swing.GroupLayout(leftPanelBot);
         leftPanelBot.setLayout(leftPanelBotLayout);
         leftPanelBotLayout.setHorizontalGroup(
@@ -283,7 +304,12 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                         .addGroup(leftPanelBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(learnRateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(maxItLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
-                        .addGap(12, 12, 12))))
+                        .addGap(12, 12, 12))
+                    .addGroup(leftPanelBotLayout.createSequentialGroup()
+                        .addGroup(leftPanelBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(statisticsLabel1)
+                            .addComponent(statisticsLabel2))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         leftPanelBotLayout.setVerticalGroup(
             leftPanelBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +340,11 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 .addGroup(leftPanelBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stepButton)
                     .addComponent(runButton))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statisticsLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statisticsLabel2)
+                .addContainerGap(194, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
@@ -378,6 +408,19 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 
         propagationLabel.setText("propagation");
 
+        activationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        activationComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                activationComboBoxActionPerformed(evt);
+            }
+        });
+
+        activationLabel.setText("activation");
+
+        actParamTextField.setText("1");
+
+        actParamLabel.setText("act. parameter");
+
         javax.swing.GroupLayout rightPanelTopLayout = new javax.swing.GroupLayout(rightPanelTop);
         rightPanelTop.setLayout(rightPanelTopLayout);
         rightPanelTopLayout.setHorizontalGroup(
@@ -404,7 +447,15 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                             .addGroup(rightPanelTopLayout.createSequentialGroup()
                                 .addComponent(addButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeButton)))
+                                .addComponent(removeButton))
+                            .addGroup(rightPanelTopLayout.createSequentialGroup()
+                                .addComponent(activationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(activationLabel))
+                            .addGroup(rightPanelTopLayout.createSequentialGroup()
+                                .addComponent(actParamTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(actParamLabel)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -425,9 +476,17 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                     .addComponent(propagationLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rightPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(activationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(activationLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(rightPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(actParamTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(actParamLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(rightPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
                     .addComponent(removeButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addComponent(descLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(descLabel2)
@@ -475,7 +534,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                     .addGroup(rightBottomPanelLayout.createSequentialGroup()
                         .addComponent(zoomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(zoomLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+                        .addComponent(zoomLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(rightBottomPanelLayout.createSequentialGroup()
                         .addGroup(rightBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(vSpaceTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
@@ -556,10 +615,11 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     //++++++++++++++++++++++++++++++++++++++++++Methods+++++++++++++++++++++++++++++++++++++   
     public void updateButtonTexts(){
     	NeuronButton bComponent;
+    	DecimalFormat df = new DecimalFormat("0.00");
     	for (Component component:gridPanel.getComponents()){
     		if(component.getClass() == NeuronButton.class){
     			bComponent = (NeuronButton) component;
-    			bComponent.setText("" + myNetwork.getNeuron(bComponent.layer, bComponent.position).getLastOutput());
+    			bComponent.setText("" + df.format(myNetwork.getNeuron(bComponent.layer, bComponent.position).getLastOutput()));
     		}
     	}
     }
@@ -568,6 +628,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
     	int targetLayer;
     	String propFunc;
+    	String actFunc;
+    	double[] actParam = new double[5];
     	try{
         	//throws NumberFormatException if not a Number.
     		targetLayer = Integer.parseInt(whichLayerTextField.getText())-1;
@@ -576,7 +638,10 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     			
     			//adding a new Neuron might change the maxLayerSize to maxLayerSize + 1
     			propFunc = possiblePropFunc[propagationComboBox.getSelectedIndex()];
-                myNetwork.addNeuron(targetLayer, new Neuron(propFunc));
+    			actFunc = possibleActFunc[activationComboBox.getSelectedIndex()];
+    			//TODO add check for numberformat
+    			actParam[0] = Double.parseDouble(actParamTextField.getText());
+                myNetwork.addNeuron(targetLayer, new Neuron(propFunc,actFunc,actParam));
                 
                 //Check if the maxLayerSize has changed and if so add a column to the gridlayout.
                 int whereTo;
@@ -734,6 +799,16 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     	this.updateButtonTexts();
     }  
     
+    private void activationComboBoxActionPerformed(java.awt.event.ActionEvent evt) {  
+        if(possibleActFunc[activationComboBox.getSelectedIndex()].equals("sig")){
+        	actParamTextField.setVisible(true);
+        	 actParamLabel.setVisible(true);
+        } else {
+        	actParamTextField.setVisible(false);
+        	 actParamLabel.setVisible(false);
+        }
+    } 
+    
     /**
      * @param args the command line arguments
      */
@@ -790,6 +865,10 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
  // Variables declaration - do not modify                     
     private javax.swing.JLabel DescResult1Label;
     private javax.swing.JLabel DescResult2Label;
+    private javax.swing.JLabel actParamLabel;
+    private javax.swing.JTextField actParamTextField;
+    private javax.swing.JComboBox activationComboBox;
+    private javax.swing.JLabel activationLabel;
     private javax.swing.JButton addButton;
     private javax.swing.JButton addEditEdgeButton;
     private javax.swing.JLabel addRemoveLabel;
@@ -827,6 +906,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JLabel ruleLabel;
     private javax.swing.JLabel ruleLabel1;
     private javax.swing.JButton runButton;
+    private javax.swing.JLabel statisticsLabel1;
+    private javax.swing.JLabel statisticsLabel2;
     private javax.swing.JButton stepButton;
     private javax.swing.JButton trainingButton;
     private javax.swing.JScrollPane treeScrollPane;
@@ -837,5 +918,5 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JTextField whichLayerTextField;
     private javax.swing.JComboBox zoomComboBox;
     private javax.swing.JLabel zoomLabel;
-    // End of variables declaration     
+    // End of variables declaration   
 }

@@ -47,6 +47,8 @@ public class Neuron {
 	public Neuron(Neuron neuron){
 		currentActivity = neuron.getCurrentActivity();
 		propagationFunction = neuron.getPropagationFunction();
+		activationFunction = neuron.getActivationFunction();
+		activationParam = neuron.getActivationParam();
 	}
 	
 	// +++++++++++++++++++++++++++PROPAGATION+++++++++++++++++++++++++++++++++++
@@ -103,7 +105,7 @@ public class Neuron {
 	private void updateActivity(double currentPropagation){
 		//different activation functions can be implemented. We choose one for all Neurons.
 		//No changes can be made by user. 
-		switch(activationFunction){
+		switch(this.activationFunction){
 		case "lin":
 			//linear/identity
 			this.currentActivity = currentPropagation;
@@ -151,6 +153,10 @@ public class Neuron {
 	
 	public String[] getPossiblePropFunc(){
 		return this.possiblePropFunc;
+	}
+	
+	public String[] getPossibleActFunc(){
+		return this.possibleActFunc;
 	}
 	//+++++++++++++++++++++++++++++SETTER+++++++++++++++++++++++++++++++++++++++
 	public boolean setPropagationFunction(String propFunc){

@@ -22,6 +22,7 @@ public class Network {
 	// Is that a good idea?
 	private LinkedList<Neuron>[] neuronLayer;
 
+	@SuppressWarnings("unchecked")
 	public Network(int layerCount){
 		if (layerCount <=0){
 			System.out.println(layerCount + " is not a valid layerCount and has to be positive. layerCount is set to 1.");
@@ -52,10 +53,6 @@ public class Network {
 		for (int i=0;i<amount;i++){
 			neuronLayer[targetLayer].add(new Neuron(neuron));
 		}
-	}
-	
-	public void addNeurons(int targetLayer, int amount, String propFunc){
-		this.addNeurons(targetLayer,amount,new Neuron(propFunc));
 	}
 	
 	public void removeNeuron(int targetLayer){

@@ -137,6 +137,10 @@ public class Network {
 		weightMatrix[from][to] = weight;
 	}
 	
+	public void updateWeight(int from, int to,double weight){
+		weightMatrix[from][to] = weight;
+	}
+	
 	//+++++++++++++++++++++++++++++Utilities++++++++++++++++++++++++++++
 	
 	public int[] calcRelativePosition(int absolutePosition){

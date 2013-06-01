@@ -15,6 +15,8 @@ public class Neuron {
 	// to calculate a new Activity when it needs to calculate an output value.
 	private double currentActivity;
 	private double lastOutput;
+	//used by Backpropagation Algorithm
+	private double lastPropagation;
 	// There are different ways to propagate weighted input. The different functions
 	// are defined in the propagation Method. The String in propagationFunction
 	// defines which function will be used.
@@ -25,7 +27,6 @@ public class Neuron {
 	private String activationFunction;
 	private double[] activationParam;
 	private String[] possibleActFunc = {"lin","sig"};
-
 	
 	public Neuron(){
 		currentActivity = 0;
@@ -86,6 +87,7 @@ public class Neuron {
 			}
 			break;
 		}
+		lastPropagation = result;
 		return result;
 	}
 	
@@ -157,6 +159,10 @@ public class Neuron {
 	
 	public String[] getPossibleActFunc(){
 		return this.possibleActFunc;
+	}
+	
+	public double getLastPropagation(){
+		return this.lastPropagation;
 	}
 	//+++++++++++++++++++++++++++++SETTER+++++++++++++++++++++++++++++++++++++++
 	public boolean setPropagationFunction(String propFunc){

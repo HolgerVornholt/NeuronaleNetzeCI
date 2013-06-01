@@ -75,7 +75,7 @@ public class Testing {
 			zeile = "";
 		}
 		
-		
+		new Learning("abc",myFirstNetwork,"Backprop");
 		
 	}
 }

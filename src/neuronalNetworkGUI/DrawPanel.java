@@ -53,7 +53,7 @@ public class DrawPanel extends JPanel {
             	}
                 }
                 
-                Font font = new Font("Serif", Font.PLAIN, 20*gui.currentZoom);
+                Font font = new Font("Serif", Font.PLAIN, 20*(gui.currentZoom+1));
                 g2D.setFont(font);
 
                 //weightMatrix.length can be bigger than the addedNeurons so its important to use network.getAddedNeurons()

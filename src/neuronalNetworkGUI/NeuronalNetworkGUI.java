@@ -7,6 +7,7 @@ import neuronalNetwork.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.text.DecimalFormat;
@@ -34,6 +35,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private GridLayout gridPanelLayout;
     public int currentZoom = 1;
     private String[] zoomOptions = {"0","1","2","3","4"};
+    int[] fontSizes = {10,15,40,70,90};
     private int[] neuronHeight = {33,69,128,186,246};
     private int[] neuronWidth = {34,68,127,186,245};
     private int gridHspace = 20;
@@ -768,13 +770,14 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         path = "Images/Neuron" + this.currentZoom +".png";
         imgURL = getClass().getResource(path);
         Component[] gridComponents = gridPanel.getComponents();
+        Font font = new Font("Sans-Serif", Font.PLAIN, fontSizes[currentZoom]);
         
         NeuronButton button;
         for (int i = 0; i < gridComponents.length; i++){
         	if(gridComponents[i].getClass() == new NeuronButton("",1,1,this).getClass()){
-        		//TODO change Fontsize according to zoomfactor and add default for zoomfactor 1 to constructor
         		button = (NeuronButton) gridComponents[i];
         		button.setIcon(new ImageIcon(imgURL, ""));
+        		button.setFont(font);
         	}
         }
         

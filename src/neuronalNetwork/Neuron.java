@@ -20,6 +20,12 @@ public class Neuron {
 	// defines which function will be used.
 	private String propagationFunction;
 	private String[] possiblePropFunc = {"sum","prod","max","min"};
+	//As with the propagation functions the used function will be saved in the String activationFunction.
+	//However there might be parameters that will be saved in activationParam
+	private String activationFunction;
+	private double[] activationParam;
+	private String[] possibleActFunc = {"lin","sig"};
+
 	
 	public Neuron(){
 		currentActivity = 0;
@@ -28,6 +34,13 @@ public class Neuron {
 	
 	public Neuron(String propFunc){
 		currentActivity = 0;
+		activationFunction = "lin";
+		this.setPropagationFunction(propFunc);
+	}
+	
+	public Neuron(String propFunc,String actFunc, double[] actParam){
+		currentActivity = 0;
+		this.setActivationFunction(actFunc,actParam);
 		this.setPropagationFunction(propFunc);
 	}
 	
@@ -78,6 +91,10 @@ public class Neuron {
 		return java.util.Arrays.asList(this.possiblePropFunc).contains(propFunc);
 	}
 	
+	public boolean isValidActFunc(String actFunc){
+		return java.util.Arrays.asList(this.possibleActFunc).contains(actFunc);
+	}
+	
 	public void infoPropagationFunction(){
 		
 	}
@@ -86,17 +103,15 @@ public class Neuron {
 	private void updateActivity(double currentPropagation){
 		//different activation functions can be implemented. We choose one for all Neurons.
 		//No changes can be made by user. 
-	    int activationFunction = 1;
 		switch(activationFunction){
-		case 1:
+		case "lin":
 			//linear/identity
 			this.currentActivity = currentPropagation;
 			break;
-		case 2:
+		case "sig":
 			//sigmoid
-			//g gibt die Steilheit der Kurve an
-			double g = 1;
-			this.currentActivity = 1/(1+Math.exp(-g*currentPropagation));
+			//activationParam[0] gibt die Steilheit der Kurve an
+			this.currentActivity = 1/(1+Math.exp(-activationParam[0]*currentPropagation));
 			break;
 		}
 	}
@@ -118,6 +133,14 @@ public class Neuron {
 		return this.propagationFunction;
 	}
 	
+	public String getActivationFunction(){
+		return this.activationFunction;
+	}
+	
+	public double[] getActivationParam(){
+		return this.activationParam;
+	}
+	
 	public double getCurrentActivity(){
 		return this.currentActivity;
 	}
@@ -130,12 +153,38 @@ public class Neuron {
 		return this.possiblePropFunc;
 	}
 	//+++++++++++++++++++++++++++++SETTER+++++++++++++++++++++++++++++++++++++++
-	public void setPropagationFunction(String propFunc){
+	public boolean setPropagationFunction(String propFunc){
 		if(isValidPropFunc(propFunc)){
 			this.propagationFunction = propFunc;
+			return true;
 		} else {
 			System.out.println("The name " + propFunc +" is not a defined propagation function.");
 			System.out.println("Possible Strings are " + Arrays.toString(possiblePropFunc));
+			return false;
+		}
+	}
+	
+	public boolean setActivationFunction(String actFunc,double[] actParam){
+		if(isValidActFunc(actFunc)){
+			this.activationFunction = actFunc;
+			if(activationFunction.equals("sig")){
+				if(actParam.length>0){
+				if(actParam[0]>0){
+					this.activationParam = actParam;
+				}else{
+					System.out.println("parameter needs to be greater than 0!");
+					return false;
+				}
+				}else{
+					System.out.println("not enough parameters!");
+					return false;
+				}
+			}
+			return true;
+		} else {
+			System.out.println("The name " + actFunc +" is not a defined activation function.");
+			System.out.println("Possible Strings are " + Arrays.toString(possibleActFunc));
+			return false;
 		}
 	}
 }

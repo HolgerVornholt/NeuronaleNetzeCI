@@ -274,6 +274,11 @@ public class Network {
 		return neuronLayer[layer].get(position);
 	}
 	
+	public Neuron getNeuron(int absPos){
+		int[] relPos = calcRelativePosition(absPos);
+		return neuronLayer[relPos[0]].get(relPos[1]);
+	}
+	
 	public int howManyInLayer(int layer){
 		return this.neuronLayer[layer].size();
 	}

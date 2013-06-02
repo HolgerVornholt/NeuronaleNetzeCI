@@ -21,6 +21,8 @@ public class Learning {
 	private int currentIteration = 0;
 	private double currentError= 99999;
 	
+	private String errorMessage = "";
+	
 	public Learning(String trainingFilePath,Network network,String learnMethod){
 		if(isValidLearnMethod(learnMethod)){
 			this.learnMethod = learnMethod;
@@ -91,6 +93,7 @@ public class Learning {
 	}
 
 	public void nextIteration(){
+		errorMessage = "";
 		currentIteration++; 
 		currentError = 0;
 		double[] currentOutput;
@@ -106,20 +109,47 @@ public class Learning {
 				currentError = currentError + Math.abs(outputValues[scenario][j] - currentOutput[j]);
 			}
 			//learn
+			double[][] weightMatrix = myNetwork.getWeightMatrix();
+			int[] relPos = new int[2];
 			switch(learnMethod){
 			case "Hebb":
-				//TODO Hebb
+				//The Hebb rule increases the weights for an existing connection depending on the activity between the connected Neurons
+				for(int i = 0;i<myNetwork.getAddedNeurons(); i++){
+				for(int j = i+1;j<myNetwork.getAddedNeurons();j++){
+					relPos = myNetwork.calcRelativePosition(i);
+					//only feed-forward allowed so edges in a layer will be ignored
+					if ((relPos[0] !=myNetwork.calcRelativePosition(j)[0])&&(weightMatrix[i][j]!=0)){
+						myNetwork.updateWeight(i, j, weightMatrix[i][j] + this.learningRate*myNetwork.getNeuron(i).getLastOutput()*myNetwork.getNeuron(j).getLastOutput());
+					}
+				}
+				}
 				break;
 			case "Delta":
-				//TODO Delta
+				//The Delta rule only works for networks with two layers.
+				if(myNetwork.getLayerCount()==2){
+					double delta;
+					int iabsPos;
+					int jabsPos;
+					for(int i = 0;i<myNetwork.howManyInLayer(0); i++){
+					for(int j = 0;j<myNetwork.howManyInLayer(1);j++){
+						delta = outputValues[scenario][j]-myNetwork.getNeuron(1,j).getLastOutput();
+						iabsPos = myNetwork.calcAbsolutePosition(0,i);
+						jabsPos = myNetwork.calcAbsolutePosition(1, j);
+						myNetwork.updateWeight(iabsPos, jabsPos,weightMatrix[iabsPos][jabsPos]+this.learningRate*myNetwork.getNeuron(0,i).getLastOutput()*delta);
+					}
+					}
+				}else{
+					System.out.println("more than 2 layers -> exit");
+					errorMessage = "more than 2 layers -> exit";
+					currentError = 0;
+					currentIteration = maxIterations;
+				}
 				break;
 			case "Backprop":
-				int[] relPos = new int[2];
 				double[] activationParam;
 				Neuron currentNeuron;
 				double[] delta = new double[myNetwork.getAddedNeurons()]; 
 				double g = 0;
-				double[][] weightMatrix = myNetwork.getWeightMatrix();
 				//calculate deltas
 				for(int j = myNetwork.getAddedNeurons()-1; j>=0;j--){
 					relPos = myNetwork.calcRelativePosition(j);
@@ -129,7 +159,8 @@ public class Learning {
 						activationParam = currentNeuron.getActivationParam();
 						g = activationParam[0];
 					} else{
-						System.out.println("no sigmoid function -> exit");
+						System.out.println("No sigmoid function -> exit");
+						errorMessage = "No sigmoid function -> exit";
 						currentError = 0;
 						currentIteration = maxIterations;
 					}
@@ -192,10 +223,19 @@ public class Learning {
 		return java.util.Arrays.asList(possibleLearnMethods).contains(learnMethod);
 	}
 	
+	public double[][] getOutputValues(){
+		return this.outputValues;
+	}
+	
+	public double[][] getInputValues(){
+		return this.inputValues;
+	}
+	
 	public String[] getInfo(){
-		String[] info = new String[2];
+		String[] info = new String[3];
 		info[0]= "Current Iteration: " + currentIteration + "/"+maxIterations;
 		info[1]= "Sum of all Errors: " + currentError;
+		info[2]= errorMessage;
 		return info;
 	}
 

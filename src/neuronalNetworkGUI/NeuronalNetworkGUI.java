@@ -20,6 +20,7 @@ import javax.swing.*;
  */
 
 //TODO The Neuron layers could need a label to visiualize input, output and hidden layers.
+//TODO Randomize Button
 public class NeuronalNetworkGUI extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 	private DrawPanel drawPanel;
@@ -66,8 +67,12 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         this.possibleLearnMethods = Learning.getPossibleLearnMethods();
         ruleComboBox.setModel(new javax.swing.DefaultComboBoxModel(possibleLearnMethods));
         ruleComboBox.setSelectedIndex(0);
+        //default values
+        this.layersTextField.setText("3");
+        this.whichLayerTextField.setText("0");
+        this.learnRateTextField.setText("0.2");
+        this.maxItTextField.setText("100000");
         
-               
         
         gridPanel = new JPanel();
         drawPanel = new DrawPanel(this);
@@ -844,13 +849,31 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_stepButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
-         	learning.run(Integer.parseInt(maxItTextField.getText()), 0.5);
+	    	try{
+    		double threshold=0.05;
+	        	String result = (String)JOptionPane.showInputDialog(
+	                    this,
+	                    "Please enter error threshold:",
+	                    "Error threshold",
+	                    JOptionPane.PLAIN_MESSAGE,
+	                    null,
+	                    null,
+	                    null);
+	        	if(result != null){
+	        		//throws NumberFormatException
+	        		threshold = Double.parseDouble(result);
+	        	}
+    		learning.run(Integer.parseInt(maxItTextField.getText()), threshold);
+    		this.calcResultButtonActionPerformed(evt);
          	String[] info;
          	info = learning.getInfo();
          	statisticsLabel3.setVisible(true);
          	statisticsLabel1.setVisible(true);
          	statisticsLabel3.setText(info[0]);
          	statisticsLabel1.setText(info[1]);
+	    	}catch(NumberFormatException ex){
+	        	JOptionPane.showMessageDialog(this, "No valid double value.");
+	        }
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void calcResultButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -901,7 +924,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     }                                               
 
     private void randomizeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+        // TODO randomize weights for feed-forward network!
     }          
     
     /**

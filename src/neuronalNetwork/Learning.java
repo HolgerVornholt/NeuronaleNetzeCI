@@ -19,7 +19,7 @@ public class Learning {
 	private int maxIterations = 100;
 	private int lastScenario = -1;
 	private int currentIteration = 0;
-	private double currentError= -1;
+	private double currentError= 99999;
 	
 	public Learning(String trainingFilePath,Network network,String learnMethod){
 		if(isValidLearnMethod(learnMethod)){
@@ -58,7 +58,7 @@ public class Learning {
 	    			}else{
 	    				outputValues[scenarioCounter][counter] = st.nval;
 	    				counter++;
-	    				if(counter == outputValues.length){
+	    				if(counter == outputNeurons){
 	    		    		scenarioCounter++;
 	    				}
 	    			}
@@ -97,14 +97,13 @@ public class Learning {
 		for(int scenario = 0; scenario <= lastScenario;scenario++){
 			//set input
 			for (int i = 0; i<inputNeurons;i++){
-				System.out.println("scenario" + scenario + "input value " + i + " is " + inputValues[scenario][i]);
 				myNetwork.setInput(0, i, inputValues[scenario][i]);
 			}
 			//calculate output
 			currentOutput = myNetwork.calcResultVector();
 			//calculate Error
 			for(int j = 0; j <outputNeurons;j++){
-				currentError = currentError + 0.5*Math.pow(outputValues[scenario][j] - currentOutput[j], 2);
+				currentError = currentError + Math.abs(outputValues[scenario][j] - currentOutput[j]);
 			}
 			//learn
 			switch(learnMethod){
@@ -122,7 +121,7 @@ public class Learning {
 				double g = 0;
 				double[][] weightMatrix = myNetwork.getWeightMatrix();
 				//calculate deltas
-				for(int j = myNetwork.getAddedNeurons()-1; j==0;j--){
+				for(int j = myNetwork.getAddedNeurons()-1; j>=0;j--){
 					relPos = myNetwork.calcRelativePosition(j);
 					currentNeuron = myNetwork.getNeuron(relPos[0], relPos[1]);
 					//for backpropagation we need continous differentiable functions. In our case we only implemented sigmoid functions.
@@ -157,8 +156,11 @@ public class Learning {
 				for(int i = 0;i<myNetwork.getAddedNeurons(); i++){
 				for(int j = i+1;j<myNetwork.getAddedNeurons();j++){
 					relPos = myNetwork.calcRelativePosition(i);
-					currentNeuron = myNetwork.getNeuron(relPos[0], relPos[1]);
-					myNetwork.updateWeight(i, j, weightMatrix[i][j] + this.learningRate*delta[j]*currentNeuron.getLastOutput());
+					//only feed-forward allowed so edges in a layer will be ignored
+					if ((relPos[0] !=myNetwork.calcRelativePosition(j)[0])&&(weightMatrix[i][j]!=0)){
+						currentNeuron = myNetwork.getNeuron(relPos[0], relPos[1]);
+						myNetwork.updateWeight(i, j, weightMatrix[i][j] + this.learningRate*delta[j]*currentNeuron.getLastOutput());
+					}
 				}
 				}
 				break;

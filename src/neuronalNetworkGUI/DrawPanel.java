@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.text.DecimalFormat;
+
 import javax.swing.*;
 
 import neuronalNetwork.Network;
@@ -53,6 +55,7 @@ public class DrawPanel extends JPanel {
             	}
                 }
                 
+                DecimalFormat df = new DecimalFormat("0.00");
                 Font font = new Font("Serif", Font.PLAIN, 20*(gui.currentZoom+1));
                 g2D.setFont(font);
 
@@ -85,7 +88,7 @@ public class DrawPanel extends JPanel {
             	  		pfeil.draw(g2D, locSource.x, locSource.y, center.x, center.y);
             	  		pfeil.draw(g2D, center.x, center.y, locTarget.x, locTarget.y);
             	  		g2D.setColor(Color.blue);
-            	  		g2D.drawString(""+weightMatrix[row][col], center.x+10, center.y-10);
+            	  		g2D.drawString(""+df.format(weightMatrix[row][col]), center.x+10, center.y-10);
             	  		g2D.setColor(Color.black);
         	  		}
         	  	}

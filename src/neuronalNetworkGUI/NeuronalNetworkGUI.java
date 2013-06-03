@@ -174,6 +174,10 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
         vSpaceTextField = new javax.swing.JTextField();
         hSpaceLabel = new javax.swing.JLabel();
         vSpaceLabel = new javax.swing.JLabel();
+        rightBottomPanel2 = new javax.swing.JPanel();
+        saveConfigButton = new javax.swing.JButton();
+        loadConfigButton = new javax.swing.JButton();
+        configLabel = new javax.swing.JLabel();
 
         jButton1.setText("jButton1");
 
@@ -681,12 +685,59 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        rightBottomPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        saveConfigButton.setText("save");
+        saveConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveConfigButtonActionPerformed(evt);
+            }
+        });
+
+        loadConfigButton.setText("load");
+        loadConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadConfigButtonActionPerformed(evt);
+            }
+        });
+
+        configLabel.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        configLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        configLabel.setText("Configurations");
+
+        javax.swing.GroupLayout rightBottomPanel2Layout = new javax.swing.GroupLayout(rightBottomPanel2);
+        rightBottomPanel2.setLayout(rightBottomPanel2Layout);
+        rightBottomPanel2Layout.setHorizontalGroup(
+            rightBottomPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rightBottomPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(rightBottomPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(configLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(rightBottomPanel2Layout.createSequentialGroup()
+                        .addComponent(saveConfigButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(loadConfigButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        rightBottomPanel2Layout.setVerticalGroup(
+            rightBottomPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rightBottomPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(configLabel)
+                .addGap(5, 5, 5)
+                .addGroup(rightBottomPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveConfigButton)
+                    .addComponent(loadConfigButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(rightPanelTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(rightBottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(rightBottomPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -694,6 +745,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
                 .addComponent(rightPanelTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rightBottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rightBottomPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1053,6 +1106,14 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     	this.calcResultButtonActionPerformed(evt);
     }    
     
+    private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }    
+    
     /**
      * @param args the command line arguments
      */
@@ -1121,6 +1182,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JButton applyViewButton;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton calcResultButton;
+    private javax.swing.JLabel configLabel;
     private javax.swing.JLabel descLabel1;
     private javax.swing.JLabel descLabel2;
     private javax.swing.JLabel descLabel3;
@@ -1136,6 +1198,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JPanel leftPanel;
     private javax.swing.JPanel leftPanelBot;
     private javax.swing.JPanel leftPanelTop;
+    private javax.swing.JButton loadConfigButton;
     private javax.swing.JLabel maxItLabel;
     private javax.swing.JTextField maxItTextField;
     private javax.swing.JLabel networkLabel;
@@ -1150,12 +1213,14 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JButton randomizeButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JPanel rightBottomPanel;
+    private javax.swing.JPanel rightBottomPanel2;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JPanel rightPanelTop;
     private javax.swing.JComboBox ruleComboBox;
     private javax.swing.JLabel ruleLabel;
     private javax.swing.JLabel ruleLabel1;
     private javax.swing.JButton runButton;
+    private javax.swing.JButton saveConfigButton;
     private javax.swing.JPanel scenarioViewerPanel;
     private javax.swing.JLabel statisticsLabel1;
     private javax.swing.JLabel statisticsLabel2;
@@ -1171,5 +1236,5 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private javax.swing.JTextField whichLayerTextField;
     private javax.swing.JComboBox zoomComboBox;
     private javax.swing.JLabel zoomLabel;
-    // End of variables declaration        
+    // End of variables declaration       
 }

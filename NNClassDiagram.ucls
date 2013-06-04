@@ -1,0 +1,160 @@
+<class-diagram version="0.9.86" automaticImage="PNG" icons="true" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetwork.Network" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetwork/Network.java" binary="false">    
+    <position x="733" y="-435" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetwork.Learning" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetwork/Learning.java" binary="false">    
+    <position x="371" y="-436" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetwork.Neuron" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetwork/Neuron.java" binary="false">    
+    <position x="1091" y="-436" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetworkGUI.NeuronalNetworkGUI" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false">    
+    <position x="735" y="875" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetworkGUI.DrawPanel" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetworkGUI/DrawPanel.java" binary="false">    
+    <position x="345" y="874" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetworkGUI.NeuronButton" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronButton.java" binary="false">    
+    <position x="1271" y="876" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="neuronalNetworkGUI.Arrow" project="NeuronalNetworkCI" 
+    file="/NeuronalNetworkCI/src/neuronalNetworkGUI/Arrow.java" binary="false">    
+    <position x="1281" y="-12" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="false">      
+      <attribute name="toButton"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronButton" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronButton.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="false">      
+      <attribute name="myNetwork"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetwork.Network" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Network.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <bendpoint x="1017" y="973"/>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronButton" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronButton.java" binary="false" navigable="false">      
+      <attribute name="gui"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetwork.Network" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Network.java" binary="false" navigable="false">      
+      <attribute name="neuronLayer"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetwork.Neuron" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Neuron.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="false">      
+      <attribute name="learning"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetwork.Learning" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Learning.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <bendpoint x="588" y="903"/>    
+    <bendpoint x="512" y="914"/>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="false">      
+      <attribute name="drawPanel"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetworkGUI.DrawPanel" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/DrawPanel.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.DrawPanel" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/DrawPanel.java" binary="false" navigable="false">      
+      <attribute name="gui"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="NeuronalNetworkCI" name="neuronalNetwork.Learning" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Learning.java" binary="false" navigable="false">      
+      <attribute name="myNetwork"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetwork.Network" 
+      file="/NeuronalNetworkCI/src/neuronalNetwork/Network.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <bendpoint x="1007" y="780"/>    
+    <source project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronalNetworkGUI" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronalNetworkGUI.java" binary="false" navigable="false">      
+      <attribute name="fromButton">        
+        <position x="1073" y="790" width="59" height="14"/>      
+      </attribute>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="NeuronalNetworkCI" name="neuronalNetworkGUI.NeuronButton" 
+      file="/NeuronalNetworkCI/src/neuronalNetworkGUI/NeuronButton.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

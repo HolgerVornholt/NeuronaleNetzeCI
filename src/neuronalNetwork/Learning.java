@@ -14,6 +14,7 @@ public class Learning {
 	private double[][] outputValues;
 	private String learnMethod;
 	private static String[] possibleLearnMethods = {"Hebb","Delta","Backprop"};
+	String trainingFilePath;
 	
 	private double learningRate = 1;
 	private int maxIterations = 100;
@@ -34,8 +35,10 @@ public class Learning {
 		inputNeurons = myNetwork.howManyInLayer(0);
 		outputNeurons = myNetwork.howManyInLayer(myNetwork.getLayerCount()-1);
 
+		this.trainingFilePath = trainingFilePath;
+		
 		try{		
-	    StreamTokenizer st = new StreamTokenizer(new FileReader(trainingFilePath) );
+	    StreamTokenizer st = new StreamTokenizer(new FileReader(this.trainingFilePath) );
 	    st.eolIsSignificant( true );
 
 	    int tval;
@@ -256,5 +259,36 @@ public class Learning {
 		}
 		}
 	}
-	
+
+	/**
+	 * @return the learnMethod
+	 */
+	public String getLearnMethod()
+	{
+		return learnMethod;
+	}
+
+	/**
+	 * @return the trainingFilePath
+	 */
+	public String getTrainingFilePath()
+	{
+		return trainingFilePath;
+	}
+
+	/**
+	 * @return the learningRate
+	 */
+	public double getLearningRate()
+	{
+		return learningRate;
+	}
+
+	/**
+	 * @return the maxIterations
+	 */
+	public int getMaxIterations()
+	{
+		return maxIterations;
+	}
 }

@@ -1,5 +1,6 @@
 package neuronalNetwork;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 /*
  * This Class manages the edges, weights and Neuron layers
@@ -12,7 +13,8 @@ import java.util.LinkedList;
 /**
  * @author Holger Vornholt, Tobias Eidmann, Michael Martin
  */
-public class Network {
+public class Network implements Serializable {
+	private static final long serialVersionUID = 2L;
 	// How many layers will the Network have. To be specified in Constructor.
 	private int layerCount;
 	private int addedNeurons;
@@ -300,5 +302,13 @@ public class Network {
 	
 	public int getAddedNeurons(){
 		return this.addedNeurons;
+	}
+
+	/**
+	 * @return the neuronLayer
+	 */
+	public LinkedList<Neuron>[] getNeuronLayer()
+	{
+		return neuronLayer;
 	}
 }

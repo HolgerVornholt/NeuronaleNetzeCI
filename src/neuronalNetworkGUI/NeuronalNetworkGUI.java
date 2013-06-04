@@ -4,6 +4,8 @@
  */
 package neuronalNetworkGUI;
 import neuronalNetwork.*;
+import neuronalNetworkSerializable.NeuronalNetworkGUIProperties;
+import neuronalNetworkSerializable.Serializable;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -11,9 +13,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.io.File;
 import java.text.DecimalFormat;
+import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * @author Holger Vornholt, Tobias Eidmann, Michael Martin
@@ -1106,14 +1111,118 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     	this.calcResultButtonActionPerformed(evt);
     }    
     
-    private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
-    }                                                
+	private void setFileFilter(JFileChooser fc, final String fileExtension, final String description, final boolean acceptAllFileFilter)
+	{
+		fc.setFileFilter(new FileFilter()
+		{
+			public boolean accept(File f)
+			{
+				return f.isDirectory() || f.getName().toLowerCase().endsWith("." + fileExtension);
+			}
 
-    private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
-    }    
-    
+			public String getDescription()
+			{
+				return description + " (*." + fileExtension + ")";
+			}
+		});
+
+		fc.setAcceptAllFileFilterUsed(acceptAllFileFilter);
+	}
+
+	private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt)
+	{
+		JFileChooser fc = new JFileChooser();
+		setFileFilter(fc, "nn", "Neuronales Netz", false);
+
+		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+		{
+			String path = fc.getSelectedFile().getPath();
+
+			Serializable.deserialize(path);
+			myNetwork = Serializable.getNetwork();
+			networkInitiated = true;
+			// enable Buttons unavailable before Network is created
+			this.addEditEdgeButton.setEnabled(true);
+			this.addButton.setEnabled(true);
+			this.removeButton.setEnabled(true);
+
+			// Set gridPanelLayout size and add NeuronButtons...
+			gridPanel.removeAll();
+			gridPanelLayout.setColumns(myNetwork.maxLayerSize());
+			gridPanelLayout.setRows(myNetwork.getLayerCount());
+
+			// add empty label at all fields in the gridPanel
+			for (int index = 0; index < (myNetwork.maxLayerSize() * myNetwork.getLayerCount()); index++)
+			{
+				gridPanel.add(new JLabel(""), index);
+			}
+
+			// add NeuronButtons at the relevant fields
+			LinkedList<Neuron>[] neuronList = myNetwork.getNeuronLayer();
+			for (int layer = 0; layer < neuronList.length; layer++)
+			{
+				for (int column = 0; column < neuronList[layer].size(); column++)
+				{
+					int index = (myNetwork.maxLayerSize() * layer) + column;
+					gridPanel.remove(index);
+					gridPanel.add(new NeuronButton("" + 0, layer, column, this), index);
+				}
+			}
+			gridPanel.setVisible(false);
+			gridPanel.setVisible(true);
+
+			this.updateButtonTexts();
+
+			// set zoom and learning options
+			neuronalNetworkSerializable.NeuronalNetworkGUIProperties nnGUIProp = new NeuronalNetworkGUIProperties();
+			nnGUIProp = Serializable.getNeuornalNetworkGUIProperties();
+			zoomComboBox.setSelectedIndex(nnGUIProp.getZoomOptionIndex());
+			hSpaceTextField.setText(String.valueOf(nnGUIProp.gethSpace()));
+			vSpaceTextField.setText(String.valueOf(nnGUIProp.getvSpace()));
+			applyViewButton.doClick();
+
+			if (nnGUIProp.learnOptionsIsSet())
+			{
+				learnRateTextField.setText(String.valueOf(nnGUIProp.getLearningRate()));
+				ruleComboBox.setSelectedItem(nnGUIProp.getLearningRule());
+				maxItTextField.setText(String.valueOf(nnGUIProp.getMaxIterations()));
+				pathTextField.setText(nnGUIProp.getTrainingFilePath());
+				applyEditButton.doClick();
+			}
+			nnGUIProp = null;
+		}
+	}
+
+	private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt)
+	{
+		JFileChooser fc = new JFileChooser();
+		String fileExtension = "nn";
+		setFileFilter(fc, fileExtension, "Neuronales Netz", false);
+
+		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+		{
+			String path = fc.getSelectedFile().getPath();
+			if (!path.endsWith("." + fileExtension))
+			{
+				path = path + "." + fileExtension;
+			}
+			neuronalNetworkSerializable.NeuronalNetworkGUIProperties nnGUIProp = new NeuronalNetworkGUIProperties();
+			nnGUIProp.setZoomOptionIndex(currentZoom);
+			nnGUIProp.sethSpace(gridHspace);
+			nnGUIProp.setvSpace(gridVspace);
+			if (learning != null)
+			{
+				nnGUIProp.setLearnOptions();
+				nnGUIProp.setLearningRate(learning.getLearningRate());
+				nnGUIProp.setLearningRule(learning.getLearnMethod());
+				nnGUIProp.setMaxIterations(learning.getMaxIterations());
+				nnGUIProp.setTrainingFilePath(learning.getTrainingFilePath());
+			}
+			Serializable.serialize(path, myNetwork, nnGUIProp);
+			nnGUIProp = null;
+		}
+	}
+
     /**
      * @param args the command line arguments
      */

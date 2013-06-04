@@ -1,5 +1,6 @@
 package neuronalNetwork;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /* This class implements the functionality that each
@@ -10,7 +11,8 @@ import java.util.Arrays;
 /**
  * @author Holger Vornholt, Tobias Eidmann, Michael Martin
  */
-public class Neuron {
+public class Neuron implements Serializable {
+	private static final long serialVersionUID = 3L;
 	// A Neuron always remembers its previous Activity and needs
 	// to calculate a new Activity when it needs to calculate an output value.
 	private double currentActivity;

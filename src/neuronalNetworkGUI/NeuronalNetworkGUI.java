@@ -26,6 +26,7 @@ import javax.swing.filechooser.FileFilter;
 
 //TODO The Neuron layers could need a label to visiualize input, output and hidden layers.
 public class NeuronalNetworkGUI extends javax.swing.JFrame {
+	final String title = "Neuronale Netze";
 	private static final long serialVersionUID = 1L;
 	private DrawPanel drawPanel;
     private JPanel gridPanel;
@@ -59,6 +60,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
     public NeuronalNetworkGUI() {
         initComponents();
+        this.setTitle(title);
         this.possiblePropFunc = new Neuron().getPossiblePropFunc();
         propagationComboBox.setModel(new javax.swing.DefaultComboBoxModel(possiblePropFunc)); 
         this.possibleActFunc = new Neuron().getPossibleActFunc();
@@ -957,6 +959,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
     private void trainingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainingButtonActionPerformed
     	//Create a file chooser
     	final JFileChooser fc = new JFileChooser();
+    	setFileFilter(fc, "csv", "Comma-separated values", false);
     	//In response to a button click:
     	int returnVal = fc.showOpenDialog(this);
     	if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -980,7 +983,7 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
 	    	try{
-    		double threshold=0.05;
+	    		double threshold=0.05;
 	        	String result = (String)JOptionPane.showInputDialog(
 	                    this,
 	                    "Please enter error threshold:",
@@ -992,19 +995,21 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 	        	if(result != null){
 	        		//throws NumberFormatException
 	        		threshold = Double.parseDouble(result);
+	        		learning.run(Integer.parseInt(maxItTextField.getText()), threshold);
+		    		this.calcResultButtonActionPerformed(evt);
+		         	String[] info;
+		         	info = learning.getInfo();
+		         	statisticsLabel3.setVisible(true);
+		         	statisticsLabel1.setVisible(true);
+		         	statisticsLabel2.setVisible(true);
+		         	statisticsLabel2.setText(info[1]);
+		         	statisticsLabel3.setText(info[0]);
+		         	statisticsLabel1.setText(info[2]);
+		         	scenarioViewerPanel.setVisible(true);
 	        	}
-    		learning.run(Integer.parseInt(maxItTextField.getText()), threshold);
-    		this.calcResultButtonActionPerformed(evt);
-         	String[] info;
-         	info = learning.getInfo();
-         	statisticsLabel3.setVisible(true);
-         	statisticsLabel1.setVisible(true);
-         	statisticsLabel2.setVisible(true);
-         	statisticsLabel2.setText(info[1]);
-         	statisticsLabel3.setText(info[0]);
-         	statisticsLabel1.setText(info[2]);
-         	scenarioViewerPanel.setVisible(true);
-	    	}catch(NumberFormatException ex){
+	    	}
+	    	catch(NumberFormatException ex)
+	    	{
 	        	JOptionPane.showMessageDialog(this, "No valid double value.");
 	        }
     }//GEN-LAST:event_runButtonActionPerformed
@@ -1171,6 +1176,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 			gridPanel.setVisible(false);
 			gridPanel.setVisible(true);
 
+			randomizeButton.setEnabled(true);
+			
 			this.updateButtonTexts();
 
 			// set zoom and learning options
@@ -1190,6 +1197,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 				applyEditButton.doClick();
 			}
 			nnGUIProp = null;
+			
+			this.setTitle(String.format("%s - %s", title, path));
 		}
 	}
 
@@ -1220,6 +1229,8 @@ public class NeuronalNetworkGUI extends javax.swing.JFrame {
 			}
 			Serializable.serialize(path, myNetwork, nnGUIProp);
 			nnGUIProp = null;
+			
+			this.setTitle(String.format("%s - %s", title, path));
 		}
 	}
 

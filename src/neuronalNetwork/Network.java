@@ -311,4 +311,9 @@ public class Network implements Serializable {
 	{
 		return neuronLayer;
 	}
+	
+	public void setWeightMatrix(double[][] weightMatrix)
+	{
+		this.weightMatrix = weightMatrix;
+	}
 }
